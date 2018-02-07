@@ -11,9 +11,8 @@ These are useful packages in this area (far from exhaustive list -- see the [CRA
 
 
 ```{r, eval=TRUE}
-install.packages(yearn) 
-library(yearn)
-yearn::yearn(ape) 
+install.packages("yearn")
+yearn::yearn(ape)
 yearn::yearn(geiger)
 yearn::yearn(phytools)
 yearn::yearn(phangorn)
@@ -43,7 +42,7 @@ It's critically important to LOOK at what you have. Are there weird values? Has 
 ```{r, eval=FALSE}
 VisualizeData <- function(phy, data) {
 	#Important here is to LOOK at your data before running it. Any weird values? Does it all make sense? What about your tree? Polytomies?
-    
+
     # Now write the code to use VisualizeData() to actually look at your data
 
 }
@@ -59,14 +58,14 @@ plotAnc(tree, anc.p, 1)
 
 Do you see uncertainty? What does it mean?
 
-Now, plot the likelihood estimates. 
+Now, plot the likelihood estimates.
 
 ```{r, eval=FALSE}
 anc.ml <- ancestral.pml(pml(tree, cleaned.discrete.phyDat), type="ml")
 plotAnc(tree, anc.ml, 1)
 ```
 
-How does this differ from parsimony? 
+How does this differ from parsimony?
 
 Why does it differ from parsimony?
 
