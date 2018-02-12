@@ -2,15 +2,18 @@
 title: "DiscreteCharacters"
 author: "Brian O'Meara"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: pdf_document
+output: html_document
 ---
 
-For this exercise, explore looking at discrete character models. Note: they are not "discreet" character models -- they're actually pretty noisy.
+For this exercise, explore looking at discrete character models. Note: they are not "discreet" character models -- they're actually pretty noisy. To check your work, click on the `knit` button in RStudio. Make sure to change `eval=FALSE` to `eval=TRUE` to run the code when `knit`ting.
 
 These are useful packages in this area (far from exhaustive list -- see the [CRAN task view](https://cran.r-project.org/web/views/Phylogenetics.html) for more). Rather than have to worry about do you have dependencies installed, etc. this will use the yearn package to load a package if you have it, or install and load it if you don't. In real life, you should have all the packages you need already installed and call with a `library()` call; best practices are evolving to use things like [https://rstudio.github.io/packrat/](packrat) to keep consistent package versions throughout an analysis.
 
 
-```{r, eval=TRUE}
+```{r setup, include=FALSE, echo=FALSE}
+r <- getOption("repos")
+r["CRAN"] <- "http://cran.cnr.berkeley.edu/"
+options(repos = r)
 install.packages("yearn")
 yearn::yearn(ape)
 yearn::yearn(geiger)
