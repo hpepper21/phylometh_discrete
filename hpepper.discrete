@@ -1,0 +1,93 @@
+getwd()
+setwd("/Users/elipepper/Documents/GitHub")
+
+r <- getOption("repos")
+r["CRAN"] <- "http://cran.cnr.berkeley.edu/"
+options(repos = r)
+install.packages("yearn")
+yearn::yearn(ape)
+yearn::yearn(geiger)
+yearn::yearn(phytools)
+yearn::yearn(phangorn)
+yearn::yearn(corHMM)
+library(rotl)
+pen.id<-tnrs_match_names("Sphenisciformes")$ott_id
+pen.tree <- tol_subtree(ott_id=pen.id)
+library(devtools)
+plot.phylo(pen.tree, cex=0.3)
+print(paste("The Penguin tree has ", Ntip(pen.tree), " terminals and ", 
+            Nnode(pen.tree), " internal nodes out of ",Ntip(pen.tree)-2,
+            " possible, which means it is ", 
+            round(100*(Nnode(pen.tree)-1)/(Ntip(pen.tree)-3), 2),
+            "% resolved", sep=""))
+# Open Tree can also return the original studies with the source trees.
+pen.studies <- studies_find_studies(property="ot:focalCladeOTTTaxonName",
+                                       value="Sphenisciformes")
+pen.studies.ids <- unlist(pen.studies$study_ids)
+# Let's get info on the first study
+pen.study1.metadata <- get_study_meta(pen.studies[[1]][[1]])
+print(get_publication(pen.study1.metadata))
+
+#tree from first study
+pen.study1.tree1 <- get_study(pen.studies.ids[[1]])
+plot.phylo(pen.study1.tree1, cex=0.3)
+print(paste("The Penguin tree has ", Ntip(pen.study1.tree1), " terminals and ", 
+            Nnode(pen.study1.tree1), " internal nodes out of ",Ntip(pen.study1.tree1)-2,
+            " possible, which means it is ", 
+            round(100*(Nnode(pen.study1.tree1)-1)/(Ntip(pen.study1.tree1)-3), 2),
+            "% resolved", sep=""))
+#tree 1 from second study
+pen.study2.tree2 <- get_study(pen.studies.ids[[2]])
+plot.phylo(pen.study2.tree2[[1]], cex = 0.3)
+print(paste("The Penguin tree has ", Ntip(pen.study2.tree2[[1]]), " terminals and ", 
+            Nnode(pen.study2.tree2[[1]]), " internal nodes out of ",Ntip(pen.study2.tree2[[1]])-2,
+            " possible, which means it is ", 
+            round(100*(Nnode(pen.study2.tree2[[1]])-1)/(Ntip(pen.study2.tree2[[1]])-3), 2),
+            "% resolved", sep=""))
+#tree 2 from second study
+plot.phylo(pen.study2.tree2[[2]], cex = 0.3)
+print(paste("The Penguin tree has ", Ntip(pen.study2.tree2[[2]]), " terminals and ", 
+            Nnode(pen.study2.tree2[[2]]), " internal nodes out of ",Ntip(pen.study2.tree2[[2]])-2,
+            " possible, which means it is ", 
+            round(100*(Nnode(pen.study2.tree2[[2]])-1)/(Ntip(pen.study2.tree2[[2]])-3), 2),
+            "% resolved", sep=""))
+#tree from third study
+pen.study3.tree3<-get_study(pen.studies.ids[[3]])
+plot.phylo(pen.study3.tree3, cex = 0.3)
+print(paste("The Penguin tree has ", Ntip(pen.study3.tree3), " terminals and ", 
+            Nnode(pen.study3.tree3), " internal nodes out of ",Ntip(pen.study3.tree3)-2,
+            " possible, which means it is ", 
+            round(100*(Nnode(pen.study3.tree3)-1)/(Ntip(pen.study3.tree3)-3), 2),
+            "% resolved", sep=""))
+#tree 1 from fourth study
+pen.study4.tree4<-get_study(pen.studies.ids[[4]])
+plot.phylo(pen.study4.tree4[[1]], cex = 0.3)
+print(paste("The Penguin tree has ", Ntip(pen.study4.tree4[[1]]), " terminals and ", 
+            Nnode(pen.study4.tree4[[1]]), " internal nodes out of ",Ntip(pen.study4.tree4[[1]])-2,
+            " possible, which means it is ", 
+            round(100*(Nnode(pen.study4.tree4[[1]])-1)/(Ntip(pen.study4.tree4[[1]])-3), 2),
+            "% resolved", sep=""))
+#tree 2 from fourth study - aka best tree
+best.phy<-plot.phylo(pen.study4.tree4[[2]], cex = 0.3)
+print(paste("The Penguin tree has ", Ntip(pen.study4.tree4[[2]]), " terminals and ", 
+            Nnode(pen.study4.tree4[[2]]), " internal nodes out of ",Ntip(pen.study4.tree4[[2]])-2,
+            " possible, which means it is ", 
+            round(100*(Nnode(pen.study4.tree4[[2]])-1)/(Ntip(pen.study4.tree4[[2]])-3), 2),
+            "% resolved", sep=""))
+#getting info on the fourth study
+pen.study4.metadata <- get_study_meta(pen.studies[[4]][[4]])
+print(get_publication(pen.study4.metadata))
+my.dat<-read.delim("Kairuku JVP Dataset pruned.txt", header=FALSE, stringsAsFactors=FALSE)
+colnames(my.dat)<-c("taxon", "scale.like.feathers")
+my.dat <- my.dat[-which(my.dat$scale.like.feathers=="?"),]
+pruned.dat <- my.dat[-which(my.dat$scale.like.feathers==""),]
+View(pruned.dat)
+
+#using parsimony to look at ancestral states
+cleaned.discrete.phyDat <- phangorn::phyDat(pruned.dat, type = "AA", levels = NULL, return.index = TRUE) #phyDat is a data format used by phangorn
+anc.p <- phangorn::ancestral.pars(pen.study4.tree4[[2]], cleaned.discrete.phyDat)
+plotAnc(pen.study4.tree4[[2]], cleaned.discrete.phyDat, 1, cex.pie = 3)
+
+#max. likelihood
+anc.ml<-ancestral.pml(pml(pen.study4.tree4[[2]], cleaned.discrete.phyDat), type = "ml")
+plotAnc(pen.study4.tree4[[2]],anc.ml,1)
